@@ -577,6 +577,11 @@ void write_file(int fd,
 
 		sz_left -= ret;
 		write_calls++;
+		if (fsync(fd) == -1) {
+			fprintf(stderr, "fs_mark: fsync failed %s\n",
+				strerror(errno));
+			cleanup_exit();
+		}
 	} while (sz_left > 0);
 
 	*avg_write_usec += (local_write_usec / write_calls);
